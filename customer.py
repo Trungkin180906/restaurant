@@ -1,4 +1,5 @@
 from menu_order import see_menu, search_dish, order_dish, list_orders
+from sort import menu_sorted
 def customer_order(customer):
     while True:
         print("\n========== MENU MÓN ĂN ==========")
@@ -7,8 +8,9 @@ def customer_order(customer):
         print("3. Đặt món")
         print("4. Xem đơn hàng")
         print("5. Hủy đơn")
+        print("6. sắp tăng dần")
         print("0. Thoát!")
-        choose=input("Chọn (0-5): ")
+        choose=input("Chọn (0-6): ")
 
         if choose=='1':
             see_menu()
@@ -30,8 +32,13 @@ def customer_order(customer):
                     break
                 else:
                     print("Hủy đơn không thành công!")
+        elif choose=='6':
+            print("Lẩu / Món Miệt Vườn / Gỏi Đồng Quê / Tráng Miệng / Giải Khát ")
+            key2=input("Nhập nhóm món ăn bạn muốn sắp xếp: ").strip()#tránh khoảng trắng
+            menu_sorted(key2)
+            # menu_sorted(input())
         else:
             break
-print(customer_order("nguyễn trung kiên"))
+customer_order("nguyễn trung kiên")
 
 
