@@ -6,7 +6,7 @@ acount_customer=[]
 acount_staff=[]
 
 def register():
-    print("\nĐĂNG KÝ TÀI KHOẢN")
+    print("\n===== ĐĂNG KÝ TÀI KHOẢN =====")
     name=input("Nhập Họ và tên: ").strip()
     phone=input("Nhập SĐT: ").strip()
     email=input("Nhập Email: ").strip()
@@ -41,9 +41,26 @@ def register():
     else:
         print("Lựa chọn không hợp lệ")
 
+#admin tạo tk cho staff
+def admin_create_staff(admin):
+    print("TẠO TÀI KHOẢN CHO STAFF")
+    name=input("Nhập Họ và tên: ").strip()
+    phone=input("Nhập SĐT: ").strip()
+    email=input("Nhập Email: ").strip()
+    password=input("Password: ").strip()
+    gender=input("Nhập giới tính(nam/nữ): ").lower().strip()
+    #kiểm tra email trung
+    for s in acount_staff:
+        if s.email==email:
+            print("Email đã tồn tại")
+            return
+    staff=Staff(name, phone, email, password, gender)
+    acount_staff.append(staff)
+    return staff
+
 #đăng nhập tài khoản
 def login():
-    print("ĐĂNG NHẬP TÀI KHOẢN")
+    print("\n===== ĐĂNG NHẬP TÀI KHOẢN =====")
     email = input("Email: ").strip()
     password = input("Mật khẩu: ").strip()
     #check admin
@@ -58,10 +75,11 @@ def login():
     for customer in acount_customer:
         if customer.email==email and customer.password==password:
             return customer
+    print("Sai mặt khẩu hoặc email")
 
 #trường hợp người dùng quên mật khẩu
 def forget_password():
-    print("QUÊN MẬT KHẨU")
+    print("\n===== QUÊN MẬT KHẨU =====")
     email=input("Nhập email để khôi phục mật khẩu: ").strip()
     user=None
     for i in acount_customer:
