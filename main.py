@@ -1,96 +1,44 @@
-from acount import register, login, forget_password, acount_admin, acount_customer, acount_staff
-from user import Admin, Customer, Staff
-
-def admin_main(admin):
-    while True:
-        print("\nADMIN MENU")
-        print("1. Xem thông tin cá nhân")
-        print("2. Tạo tài khoản staff")
-        print("0. Đăng xuất")
-        choose = input("Chọn(0-2): ").strip()
-
-        if choose == '1':
-            print(admin)
-        elif choose == '2':
-            name = input("Tên staff: ").strip()
-            phone = input("SĐT: ").strip()
-            email = input("Email: ").strip()
-            password = input("Password: ").strip()
-            gender = "khác"
-
-            # Kiểm tra email đã tồn tại chưa
-            if any(st.email == email for st in acount_staff):
-                print("Email đã tồn tại!")
-                continue
-
-            new_staff = Staff(name, phone, email, password, gender)
-            acount_staff.append(new_staff)
-            print("Tạo tài khoản staff thành công!")
-
-        elif choose == '0':
-            break
-        else:
-            print("Lựa chọn không hợp lệ!")
-
-def staff_main(staff):
-    while True:
-        print("\nSTAFF MENU")
-        print("1. Xem thông tin cá nhân")
-        print("0. Đăng xuất")
-        choose = input("Chọn(0-1): ").strip()
-
-        if choose == '1':
-            print(staff)
-        elif choose == '0':
-            break
-        else:
-            print("Lựa chọn không hợp lệ!")
-
-def customer_main(customer):
-    while True:
-        print("\nCUSTOMER MENU")
-        print("1. Xem thông tin cá nhân")
-        print("0. Đăng xuất")
-        choose = input("Chọn(0-1): ").strip()
-
-        if choose == '1':
-            print(customer)
-        elif choose == '0':
-            break
-        else:
-            print("Lựa chọn không hợp lệ!")
+from acount import register, login, forget_password
+from customer import customer_menu
+from staff import staff_menu
+from admin import admin_menu
 
 def main():
     while True:
-        print("\nHỆ THỐNG RESTAURANT")
+        print("\n=== HỆ THỐNG ĐẶT MÓN NHÀ HÀNG ===")
         print("1. Đăng ký")
         print("2. Đăng nhập")
         print("3. Quên mật khẩu")
         print("0. Thoát")
-        choose = input("Chọn(0-3): ").strip()
+        choice = input("Chọn: ").strip()
 
-        if choose == '1':
-            register()
-        elif choose == '2':
+        if choice == "1":
+            # Đăng ký
+            user = register()
+            if user:
+                print(f"Đăng ký thành công: {user.name} ({user.role})")
+        elif choice == "2":
+            # Đăng nhập
             user = login()
-            if not user:
+            if user:
+                print(f"Đăng nhập thành công: {user.name} ({user.role})")
+                # Phân quyền menu theo vai trò
+                if user.role == "customer":
+                    customer_menu(user)
+                elif user.role == "staff":
+                    staff_menu(user)
+                elif user.role == "admin":
+                    admin_menu(user)
+            else:
                 print("Sai email hoặc mật khẩu!")
-                continue
-
-            # Phân loại user
-            if user in acount_admin:
-                admin_main(user)
-            elif user in acount_staff:
-                staff_main(user)
-            elif user in acount_customer:
-                customer_main(user)
-        elif choose == '3':
+        elif choice == "3":
+            # Quên mật khẩu
             forget_password()
-        elif choose == '0':
+        elif choice == "0":
             print("Thoát hệ thống")
             break
         else:
-            print("Lựa chọn không hợp lệ!")
+            print("Lựa chọn không hợp lệ! Vui lòng chọn lại.")
 
 if __name__ == "__main__":
     main()
