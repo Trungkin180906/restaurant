@@ -1,6 +1,7 @@
 # tạo dữ liệu món ăn 
 from tabulate import tabulate
 from table import table_data
+
 dish_data={
     "Lẩu":[("L001", "Gánh Lẩu Cua Đồng", "Ngọt thanh, vị ngon từ đồng quê", 278000, "còn", 40),
            ("L002", "Gánh Lẩu Chua Cay", "Chua cay, đậm đà", 278000, "còn", 50),
@@ -35,8 +36,10 @@ dish_data={
     ],
 }
 
+list_orders=[]# danh sách đơn hàng
+cart=[]#danh sách giỏ hàng món ăn
 
-#table of dish in menu
+#xem menu
 def see_menu():
     print("\n========== DANH SÁCH MÓN ĂN ==========")
     for cat, items in dish_data.items():
@@ -49,69 +52,124 @@ def see_menu():
 
 
 #search dish in items
-def search_dish(keyword):
-    print(f"Kết quả tìm kiếm cho: {keyword}")
-    search=False
+def search_dish(code):
+    code=str(code).upper()
     for cat, items in dish_data.items():
         for i in items:
-            if keyword.lower() in i[1].lower():
-                print(f"{i[0]} - {i[1]} {i[3]:,}")
-                search=True
-    if not search:
-        print("Không tìm thấy món phù hợp trong menu!")
+            if str(i[0]).upper()==code.upper():
+                return i[1], i[3]
+    return None, None        
+
+#thêm món ăn vào giỏ hàng
+def add_dish_cart(dish_name, price, quantity, note):
+    cart.append({
+        "Tên món":dish_name,
+        "Giá":price,
+        "Số lượng":quantity,
+        "Ghi chú":note
+    })
+    print(f"Đã thêm: {quantity} - {dish_name} vào giỏ hàng")
+
+#xem giỏ hàng
+def view_cart():
+    if not cart:
+        print("Giỏ hàng trống!")
+        return
+    print("\nGIỎ HÀNG CỦA BẠN")
+    total=0
+    for i, item in enumerate(cart):
+        money=item['Giá']*item['Số lượng']
+        total+=money
+        print(f"{i}: {item['Tên món']} - Số lượng:{item['Số lượng']} - {item['Ghi chú']} - {money:,}VND")
+    print(f"Tổng số tiền {total}VND")
+
+#xóa món ăn khỏi giỏ hàng
+def remove_dish_cart(i):
+    if 0<=i<len(cart):
+        remove=cart.pop(i)
+        print(f"Đã xóa {remove['Tên món']} khỏi giỏ hàng")
+    else:
+        print("Xóa món ăn ko hợp lê!")
+
+#xác nhận đơn hàng
+def confirm_order(customer, delivery):
+    if not cart:
+        print("Không có món trong giỏ hàng")
+        return
+    order_id=len(list_orders)+1
+    total=sum(i['Giá']*i['Số lượng'] for i in cart)
+    order_items=[]#danh sách món cho đơn hàng
+    for i in cart:
+        order_items.append({#tạo đơn hàng
+            "Tên món":i['Tên món'],
+            "Số lượng":i['Số lượng'],
+            "Giá":i['Giá'],
+            "Ghi chú":i['Ghi chú'] 
+        })
+    # Tạo order
+    order = {
+        "ID": f"DH{order_id:03d}",
+        "Họ và tên": customer,
+        "Items": order_items,
+        "Tính tổng": total,
+        "Phương thức": delivery,
+        "Bàn": "Đợi gán bàn" if delivery.lower()!="Tại chỗ" else "Không cần bàn",  # Nhân viên sẽ gán sau
+        "Trạng thái": "Mới đặt"
+    }
+
+    list_orders.append(order)#thêm vào danh sách dơn hàng
+    cart.clear()#xóa giỏ hàng
+    print("Đặt hàng thành công")
+    payment(order)
+
+def payment(order):
+    print("\n=== THANH TOÁN ===")
+    print(f"Tổng tiền: {order['Tính tổng']:,} VND")
+    while True:
+        print("Phương thức thanh toán:")
+        print("1. Tiền mặt")
+        print("2. Thẻ")
+        print("3. Ví điện tử")
+    
+        choice = input("Chọn phương thức (1/2/3): ").strip()
+        if choice == "1":
+            method = "Tiền mặt"
+            break
+        elif choice == "2":
+            method = "Thẻ"
+            break
+        elif choice == "3":
+            method = "Ví điện tử"
+            break
+        else:
+            print("Lựa chọn không hợp lệ, mặc định tiền mặt")
+            method = "Tiền mặt"
+    order["Phương thức thanh toán"] = method
+    order["Trạng thái"] = "Đã thanh toán"
+    print(f"Thanh toán thành công bằng {method}")
+    print_order(order)
+
+#in đơn hàng 
+def print_order(order):
+    print("\nĐơn hàng của bạn")
+    print(f"Mã đơn      :{order['ID']}")
+    print(f"Khách hàng  :{order['Họ và tên']} ")
+    for i, item in enumerate(order["Items"],1):
+        print(f"{i}: {item['Tên món']} - {item['Số lượng']} - {item['Ghi chú']} - {item['Giá']:,}đ")
+    print(f"Phương thức :{order['Phương thức']}")
+    print(f"Bàn         :{order['Bàn']}")
+    if "Phương thức thanh toán" in order:
+        print(f"Thanh toán   :{order['Phương thức thanh toán']}")
+    print(f"Tính tổng   :{order['Tính tổng']}VND") 
+    print(f"Trạng thái  :{order['Trạng thái']}")  
+    print("==================================")
+
+#tạo hàm xem id đơn hàng
+def find_order_by_id(order_id):
+    for order in list_orders:
+        if order["ID"] == order_id:
+            return order
+    return None
 
 
 
-list_orders=[]# create list empty contains content order
-#customer order dish in menu
-def order_dish(customer):
-    see_menu()
-    code=input("Nhập mã món muốn đặt: ").upper()
-    quantity=int(input("Số lượng: "))
-    note=input("Ghi chú: ")
-    delivery=input("Hình thức (tại chỗ/mang đi): ")
-
-    #trường hợp thêm 
-    table_code=None
-    if delivery.lower()=="tại chỗ":
-        while True: #lập đến khi có bàn trống
-            table_code=input("Nhập số bàn: ").upper()
-            search_table=False
-            for cat, tables in table_data.items():
-                for t in tables:
-                    if (t[0]==table_code):
-                        search_table=True
-                        if (t[2]=="Trống"):
-                            break
-                        elif (t[2]=="Đã có khách"):
-                            break
-                        else:
-                            print("Bàn đã có khách chọn bàn khác!")
-                            table_code=None
-            if search_table and table_code:
-                break
-            elif not search_table:
-                print("Mã bàn không hợp lệ, vui lòng nhập lại!")
-
-    for cat, items in dish_data.items():
-        for i in items:
-            if i[0]==code:
-                total=i[3]*quantity# tính tổng giá món * số lượng món
-                order={
-                    "Họ và tên":customer,
-                    "Tên món":i[1],
-                    "Số lượng":quantity,
-                    "Ghi chú":note,
-                    "Phương thức":delivery,
-                    "Bàn":table_code if table_code else "giao hàng",
-                    "Tính tổng":total,
-                    "Trạng thái":"Mới đặt" 
-                }
-                list_orders.append(order)
-                print(f"Đặt món {i[1]} thành công, tổng: {total:,} - bàn {order['table']} - Hình thức: {delivery} - Trạng thái: {order['status']}")
-
-#testing        
-if __name__=="__main__":
-    see_menu()
-    search_dish('cua')
-    order_dish('Nguyễn Trung Kiên')
