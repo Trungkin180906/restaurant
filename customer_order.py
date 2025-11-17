@@ -1,7 +1,5 @@
 # tạo dữ liệu món ăn 
 from tabulate import tabulate
-from table import table_data
-
 dish_data={
     "Lẩu":[("L001", "Gánh Lẩu Cua Đồng", "Ngọt thanh, vị ngon từ đồng quê", 278000, "còn", 40),
            ("L002", "Gánh Lẩu Chua Cay", "Chua cay, đậm đà", 278000, "còn", 50),
@@ -41,7 +39,7 @@ cart=[]#danh sách giỏ hàng món ăn
 
 #xem menu
 def see_menu():
-    print("\n========== DANH SÁCH MÓN ĂN ==========")
+    print("\n===== DANH SÁCH MÓN ĂN =====")
     for cat, items in dish_data.items():
         table=[]
         for i in items:
@@ -123,7 +121,7 @@ def confirm_order(customer, delivery):
     payment(order)
 
 def payment(order):
-    print("\n=== THANH TOÁN ===")
+    print("\n===== THANH TOÁN =====")
     print(f"Tổng tiền: {order['Tính tổng']:,} VND")
     while True:
         print("Phương thức thanh toán:")
@@ -151,7 +149,7 @@ def payment(order):
 
 #in đơn hàng 
 def print_order(order):
-    print("\nĐơn hàng của bạn")
+    print("\n===== ĐƠN HÀNG CỦA BẠN =====")
     print(f"Mã đơn      :{order['ID']}")
     print(f"Khách hàng  :{order['Họ và tên']} ")
     for i, item in enumerate(order["Items"],1):
@@ -163,13 +161,5 @@ def print_order(order):
     print(f"Tính tổng   :{order['Tính tổng']}VND") 
     print(f"Trạng thái  :{order['Trạng thái']}")  
     print("==================================")
-
-#tạo hàm xem id đơn hàng
-def find_order_by_id(order_id):
-    for order in list_orders:
-        if order["ID"] == order_id:
-            return order
-    return None
-
 
 
