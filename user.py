@@ -24,4 +24,3 @@ class Admin:#admin ko kế thừa từ user nên ko dùng supper()
 
 
         
-
