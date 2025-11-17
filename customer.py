@@ -1,8 +1,8 @@
 from menu_order import see_menu, search_dish, add_dish_cart, view_cart, remove_dish_cart, print_order, confirm_order, list_orders, cart
-def customer_order(customer):
+def customer_menu(customer):
     customer=input("Nhập Họ và tên: ").strip()
     while True:
-        print("\n========== MENU MÓN ĂN ==========")
+        print("\n===== MENU MÓN ĂN =====")
         print("1. Xem menu")
         print("2. Thêm món vào giỏ hàng ")
         print("3. Xem giỏ hàng")
@@ -50,8 +50,5 @@ def customer_order(customer):
         else:
             break
 #customer_order("nguyễn trung kiên")
-
-
-
 
 
