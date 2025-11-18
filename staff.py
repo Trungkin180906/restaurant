@@ -18,6 +18,11 @@ def staff_menu(staff):
                 print(f"{i}. Mã đơn {order['ID']}")
                 print(f"Khách hàng   :{order['Họ và tên']}")
                 print(f"Phương thức  :{order['Phương thức']}")
+                if order['Phương thức'].lower()=='mang đi':
+                    print(f"Địa chỉ giao        :{order.get('Địa chỉ', 'không có')}")
+                    print(f"SDT nhân            :{order.get('SDT nhận', 'không có')}")
+                    print(f"Thời gian dự kiến   :{order.get('Thời gian', 'Không có')}")
+                    print(f"Ghi chú cho shipper :{order.get('Ghi chú', 'không có')}")
                 print(f"Bàn          :{order.get('Bàn', 'Chưa gán')}")
                 print(f"Trạng thái   :{order.get('Trạng thái', 'Mới đặt')}")
                 print(f"Thanh toán   :{order.get('Phương thức thanh toán', 'Chưa thanh toán')}")
@@ -71,8 +76,10 @@ def staff_menu(staff):
                     break
             if not check:
                 print("Mã bàn không tồn tại!")
-        else:
+        elif choose=='0':
             break
+        else:
+            print("Lựa chọn không hợp lệ!")
 
 #staff_menu() 
   
