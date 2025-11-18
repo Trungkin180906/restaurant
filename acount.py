@@ -74,7 +74,7 @@ def login():
     for customer in acount_customer:
         if customer.email==email and customer.password==password:
             return customer
-    print("Sai mặt khẩu hoặc email")
+    # print("Sai mặt khẩu hoặc email")
 
 #trường hợp người dùng quên mật khẩu
 def forget_password():

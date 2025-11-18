@@ -24,7 +24,7 @@ def add_dish():
         return
     price=int(price_input)
     status=input("Tình trạng: ").strip()
-    quantity_input=int(input("Số lượng: ").strip())
+    quantity_input=int(input("Số lượng: "))
     if not quantity_input.isdigit():
         quantity=0
     quantity=int(quantity_input)

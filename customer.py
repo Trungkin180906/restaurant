@@ -1,4 +1,4 @@
-from menu_order import see_menu, search_dish, add_dish_cart, view_cart, remove_dish_cart, print_order, confirm_order, list_orders, cancel_order
+from menu_order import see_menu, search_dish, add_dish_cart, view_cart, remove_dish_cart, print_order, confirm_order, list_orders, cancel_order, search_name_dish,sort_dish
 def update_customer(customer):
     print("\n===== CẬP NHẬT TÀI KHOẢN CÁ NHÂN =====")
     print(f"Email (không thể thay đổi): {customer.email}")
@@ -30,8 +30,10 @@ def customer_menu(customer):
         print("7. Xác nhận đặt hàng")
         print("8. Xem đơn hàng")
         print("9. Hủy đơn hàng")
+        print("10. tìm theo tên")
+        print("11. sắp xếp tăng dần theo giá")
         print("0. Thoát!")
-        choose=input("Chọn (0-8): ")
+        choose=input("Chọn (0-11): ")
 
         if choose=='1':
             print(f"Họ tên: {customer.name}")
@@ -71,6 +73,13 @@ def customer_menu(customer):
                     print_order(order)
         elif choose=='9':
             cancel_order(customer)
+        elif choose=="10":
+            key=input("nhập tên món ăn: ").strip()
+            search_name_dish(key)
+        elif choose=="11":
+            print("Lẩu / Món Miệt Vườn / Gỏi Đồng Quê / Tráng Miệng / Giải Khát ")
+            key2 = input("Nhập nhóm món ăn bạn muốn sắp xếp: ").strip()
+            sort_dish(key2)
         elif choose=='0':
             break
         else:

@@ -58,6 +58,66 @@ def search_dish(code):
                 return i[1], i[3]
     return None, None        
 
+#search name dish in items
+def search_name_dish(keyword):
+    print(f"Kết quả tìm kiếm cho: {keyword}")
+    search=False
+    for cat, items in dish_data.items():
+        for i in items:
+            if keyword.lower() in i[1].lower():
+                print(f"{i[0]} - {i[1]} {i[3]:,}")
+                search=True
+    if not search:
+        print("Không tìm thấy món phù hợp trong menu!")
+
+#sort dish
+def sort_dish(category_name):
+    # 1. TÌM NHÓM (Giữ nguyên logic tìm kiếm thông minh đã sửa lúc nãy)
+    search_key = category_name.strip().lower()
+    found_key = None
+
+    for key in dish_data:
+        if key.lower() == search_key:
+            found_key = key
+            break
+    
+    # 2. NẾU TÌM THẤY -> TIẾN HÀNH SẮP XẾP THỦ CÔNG
+    if found_key:
+        # Lấy danh sách món ăn của nhóm đó
+        # Thêm [:] để tạo bản sao, tránh làm lộn xộn menu gốc
+        items_list = dish_data[found_key][:] 
+        
+        # --- BẮT ĐẦU THUẬT TOÁN BUBBLE SORT (NỔI BỌT) ---
+        n = len(items_list)
+        
+        # Vòng lặp lớn: Duyệt qua toàn bộ danh sách
+        for i in range(n):
+            # Vòng lặp con: So sánh các cặp liền kề
+            for j in range(0, n - i - 1):
+                # So sánh GIÁ (index 3) của món trước (j) và món sau (j+1)
+                price_current = items_list[j][3]
+                price_next = items_list[j+1][3]
+                
+                # Nếu món trước đắt hơn món sau -> Đổi chỗ (Swap)
+                if price_current > price_next:
+                    # Thực hiện đổi chỗ
+                    items_list[j], items_list[j + 1] = items_list[j + 1], items_list[j]
+        # --- KẾT THÚC THUẬT TOÁN ---
+
+        # 3. IN KẾT QUẢ (Dùng danh sách items_list đã được sắp xếp ở trên)
+        print(f"\n--- NHÓM '{found_key.upper()}' (SẮP XẾP THỦ CÔNG TĂNG DẦN) ---")
+        
+        table = []
+        for i in items_list:
+            table.append([i[0], i[1], i[2], f"{i[3]:,}", i[4]])
+            
+        headers = ["Mã", "Tên Món", "Khẩu Vị", "Giá", "Tình Trạng"]
+        print(tabulate(table, headers=headers, tablefmt="fancy_grid"))
+        
+    else:
+        print(f"Lỗi: Không tìm thấy nhóm '{category_name}'.")
+        print("Các nhóm hiện có: " + ", ".join(dish_data.keys()))
+
 #thêm món ăn vào giỏ hàng
 def add_dish_cart(dish_name, price, quantity, note):
     cart.append({
