@@ -1,21 +1,48 @@
-from menu_order import see_menu, search_dish, add_dish_cart, view_cart, remove_dish_cart, print_order, confirm_order, list_orders, cart
+from menu_order import see_menu, search_dish, add_dish_cart, view_cart, remove_dish_cart, print_order, confirm_order, list_orders, cancel_order
+def update_customer(customer):
+    print("\n===== CẬP NHẬT TÀI KHOẢN CÁ NHÂN =====")
+    print(f"Email (không thể thay đổi): {customer.email}")
+    name=input("Họ và tên: ").strip()
+    phone=input("SDT: ").strip()
+    gender=input(f"Giới tính ({customer.gender}): ").lower().strip()
+    password=input("Password: ")
+    if name:
+        customer.name=name
+    if phone:
+        customer.phone=phone
+    if gender in ["nam", "nữ"]:
+        customer.gender=gender
+    else:
+        customer.gender='khác'
+    if password:
+        customer.password=password
+    print("Cập nhật thông tin thành công")
+
 def customer_menu(customer):
-    customer=input("Nhập Họ và tên: ").strip()
     while True:
-        print("\n===== MENU MÓN ĂN =====")
-        print("1. Xem menu")
-        print("2. Thêm món vào giỏ hàng ")
-        print("3. Xem giỏ hàng")
-        print("4. Xóa món trong giỏ hàng")
-        print("5. Xác nhận đặt hàng")
-        print("6. Xem tất cả đơn hàng")
+        print("\n===== MENU KHÁCH HÀNG =====")
+        print("1. Xem thông tin cá nhân")
+        print("2. Cập nhật thông tin cá nhân")
+        print("3. Xem menu")
+        print("4. Tìm - thêm món vào giỏ hàng ")
+        print("5. Xem giỏ hàng")
+        print("6. Xóa món trong giỏ hàng")
+        print("7. Xác nhận đặt hàng")
+        print("8. Xem đơn hàng")
+        print("9. Hủy đơn hàng")
         print("0. Thoát!")
-        choose=input("Chọn (0-6): ").strip()
+        choose=input("Chọn (0-8): ")
 
         if choose=='1':
-            see_menu()
+            print(f"Họ tên: {customer.name}")
+            print(f"SDT: {customer.phone}")
+            print(f"Email: {customer.email}")
+            print(f"Giới tính: {customer.gender}")
         elif choose=='2':
+            update_customer(customer)
+        elif choose=='3':
             see_menu()
+        elif choose=='4':
             code=input("Nhập mã món: ").strip().upper()
             dish_name, price=search_dish(code)
             if dish_name:
@@ -24,31 +51,30 @@ def customer_menu(customer):
                 add_dish_cart(dish_name, price, quantity, note)
             else:
                 print("Mã món không hợp lệ")
-        elif choose=='3':
-                view_cart()
-        elif choose=='4':
-            view_cart()
-            index=input("Nhập số thứ tự món cần xóa: ").strip()
-            if index.isdigit():
-                idx=int(index)-1
-                remove_dish_cart(idx)
         elif choose=='5':
-            if not cart:
-                print("Giỏ hàng trống, vui lòng thêm món vào trước khi đặt hàng")
-                continue
-            delivery=input("Hình thức (tại chỗ/mang đi): ").lower().strip()
-            if delivery not in ['tại chỗ', 'mang đi']:
-                print("Hình thức không hợp lệ, mặc định là 'mang đi")
-                delivery='mang đi'
-            confirm_order(customer, delivery)
+            view_cart()
         elif choose=='6':
-            if not list_orders:
-                print("Chưa có đơn hàng nào")
+            index=input("Nhập vị trí món cần xóa")
+            if index.isdigit():
+                remove_dish_cart(int(index))
             else:
-                for i in list_orders:
-                    print_order(i)
-        else:
+                print("Vị trí không hợp lệ!")
+        elif choose=='7':
+            delivery=input("Phương thức: (tại chỗ/mang đi): ").strip()
+            confirm_order(customer.name, delivery)
+        elif choose=='8':
+            print("\n===== TẤT CẢ ĐƠN HÀNG CỦA KHÁCH =====")
+            if not list_orders:
+                print("Chưa có đơn nào!")
+            else:
+                for order in list_orders:
+                    print_order(order)
+        elif choose=='9':
+            cancel_order(customer)
+        elif choose=='0':
             break
+        else:
+            print("Lựa chọn không hợp lệ!")
+
+             
 #customer_order("nguyễn trung kiên")
-
-
