@@ -1,6 +1,6 @@
 from menu_order import see_menu, dish_data
-from acount import acount_staff
-from user import Staff
+from acount import acount_staff, acount_customer
+from user import Staff, Customer
 
 #DISH
 #search dish
@@ -18,16 +18,16 @@ def add_dish():
     code=input("Mã món: ").strip().upper()
     name=input("Tên món: ").strip()
     taste=input("Khẩu vị: ").strip()
-    try:
-        price=int(input("Giá: ").strip())
-    except Exception:
+    price_input=input("Giá: ").strip()
+    if not price_input.isdigit():
         print("Giá không hợp lệ!")
         return
+    price=int(price_input)
     status=input("Tình trạng: ").strip()
-    try:
-        quantity=int(input("Số lượng: ").strip())
-    except Exception:
+    quantity_input=int(input("Số lượng: ").strip())
+    if not quantity_input.isdigit():
         quantity=0
+    quantity=int(quantity_input)
     dish=(code, name, taste, price, status, quantity)
     dish_data.setdefault(cat, []).append(dish)#lấy giá trị trả về trong trường hợp key không tồn tại
     print(f"Đã thêm {code} - {name} vào nhóm {cat}")
@@ -49,18 +49,12 @@ def update_dish():
         return
     name=input(f"Tên [{i[1]}]: ").strip()
     taste=input(f"Khẩu vị [{i[2]}]: ").strip()
-    try:
-        price_in=input(f"Giá [{i[3]}]")
-        price=int(price_in) if price_in else i[3]
-    except Exception:
-        print("Giá không hợp lệ, giữ nguyên!")
-        price=i[3]
-    status=input(f"Trạng thái {i[4]}: ").strip()
-    try:
-        stock_in=input(f"Số tồn {i[4]}: ").strip()
-        stock=int(stock_in) if stock_in else i[4]
-    except Exception:
-        stock=i[4]
+
+    price_in=input(f"Giá [{i[3]}]")
+    price=int(price_in) if price_in else i[3]
+    status=input(f"Trạng thái {i[4]}: ").strip() or i[4]
+    stock_in=input(f"Số tồn {i[4]}: ").strip()
+    stock=int(stock_in) if stock_in.isdigit() else i[4]
     dish_data[cat][index]=(i[0], name, taste, price, status, stock)
     print(f"Đã cập nhất món {i[0]}")
 
@@ -94,15 +88,39 @@ def add_staff():
 def remove_staff():
     see_staff()
     i=input("Nhập số thứ tự nhân viên muốn xóa: ").strip()
-    try:
-        i=int(i)-1
-        if 0<=i<len(acount_staff):
-            removed=acount_staff.pop(i)
-            print(f"Đã xóa nhân viên {removed.name} khỏi hệ thống")
-        else:   
-            print("Số thứ tự không hợp lệ!")
-    except Exception:
+    if not i.isdigit():
         print("Phải nhập số hợp lệ")
+        return
+    i=int(i)-1
+    if 0<=i<len(acount_staff):
+        removed=acount_staff.pop(i)
+        print(f"Đã xóa nhân viên {removed.name} khỏi hệ thống")
+    else:   
+            print("Số thứ tự không hợp lệ!")
+
+#CUSTOMER
+#xem danh sách khách hàng
+def see_customer():
+    print("\n===== XEM DANH SÁCH KHÁCH HÀNG =====")
+    if not acount_customer:
+        print("Chưa có khách hàng nào")
+        return
+    for i, customer in enumerate(acount_customer, 1):
+        print(f"{i}.{customer.name} - {customer.phone} - {customer.email}")
+
+#xóa khách hàng
+def remove_customer():
+    see_customer()
+    i=input("Nhập số thứ tự khách hàng muốn xóa: ").strip()
+    if not i.isdigit():
+        print("Phải nhập số hợp lệ")
+        return
+    i=int(i)-1
+    if 0<=i<len(acount_customer):
+        removed=acount_customer.pop(i)
+        print(f"Đã xóa khách hàng {removed.name} khỏi hệ thống")
+    else:
+        print("Số thứ tự không hợp lệ!")
 
 #MANAGEMENT STAFF
 def management_staff():
@@ -120,8 +138,10 @@ def management_staff():
             add_staff()
         elif choose=='3':
             remove_staff()
-        else:
+        elif choose=='0':
             break
+        else:
+            print("Lựa chọn không hợp lệ!")
 
 #MANAGEMENT MENU
 def management_menu():
@@ -142,8 +162,27 @@ def management_menu():
             remove_dish()
         elif choose=='4':
             update_dish()
-        else:
+        elif choose=='0':
             break
+        else:
+            print("Lựa chọn không hợp lệ!")
+
+#MANAGEMENT CUSTOMER
+def managenet_customer():
+    while True:
+        print("\n===== MANAGEMENT CUSTOMER =====")
+        print("1. Xem danh sách khách hàng")
+        print("2. Xóa khách hàng")
+        print("0. Thoát")
+        choose=input("Chọn(0-2): ").strip()
+        if choose=='1':
+            see_customer()
+        elif choose=='2':
+            remove_customer()
+        elif choose=='0':
+            break
+        else:
+            print("Lựa chọn không hợp lệ!")
 
 #admin chọn chức năng quản lý của mình
 def admin_menu(admin):
@@ -151,17 +190,17 @@ def admin_menu(admin):
         print("\n===== LỰA CHỌN CỦA ADMIN =====")
         print("1. Quản lý món ăn")
         print("2. Quản lý nhân viên")
+        print("3. Quản lý khách hàng")
         print("0. Thoát")
-        choose=input("Chọn(0-4): ")
+        choose=input("Chọn(0-2): ")
         if choose=='1':
             management_menu()
         elif choose=='2':
             management_staff()
+        elif choose=='3':
+            management_menu()
         elif choose=='0':
             break
         else:
             print("Lựa chọn không hợp lệ!")
-
-
-
         
