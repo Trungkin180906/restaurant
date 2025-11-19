@@ -22,7 +22,7 @@ def register():
             print("Your email has already been used")
             return
 
-    print("\nCHOOSE A ROLE")
+    print("\n===== CHOOSE A ROLE =====")
     print("1. Customer")
     print("2. Staff (authorized by admin)")
     role=input("Enter user role(1/2): ").strip()
@@ -42,7 +42,7 @@ def register():
 
 #admin tạo tk cho staff
 def admin_create_staff(admin):
-    print("CREATE ACCOUNT FOR STAFF")
+    print("\n===== CREATE ACCOUNT FOR STAFF =====")
     name=input("Name: ").strip()
     phone=input("Phone number: ").strip()
     email=input("Email: ").strip()
