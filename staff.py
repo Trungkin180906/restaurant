@@ -36,9 +36,23 @@ def staff_menu(staff):
                 continue
             idx=int(index)-1 
             if 0<=idx<len(list_orders):
-                new_status=input("Trạng thái mới (xác nhận/chế biến/hoàn tất/hủy): ")
-                list_orders[idx]["Trạng thái"]=new_status
-                print("Đã cập nhật thành công đơn hàng")
+                order=list_orders[idx]
+                print(f"Đơn hiện tại: {order['ID']} - Trang thái: {order['Trạng thái']}")
+                new_status=input("Trạng thái mới (xác nhận/chế biến/hoàn tất/hủy): ").lower().strip()
+                if new_status=='hủy':
+                    if not order.get('Yêu cầu hủy'):#kiểm tra xem khách đã gửi yêu cầu hay chưa
+                        print("Khách chưa gửi yêu cầu hủy đơn")
+                        continue
+                    #lưu thông tin hoàn tiền cho khách
+                    refund_money=order.get("Tính tổng")
+                    order['Trạng thái']='Đã hủy'
+                    order['Hoàn tiền']=refund_money
+                    order['Thông báo']=f"Bạn đã hủy đơn {order['ID']} thành công"
+                    list_orders.pop(idx)#xóa khỏi danh sách đơn hàng staff
+                    print(order['Thông báo'])
+                else:
+                    order['Trạng thái']=new_status
+                    print(f"Đã cập nhật thành công đơn hàng {new_status}")
             else:
                 print("Cập nhật đơn hàng không thành công!")
         elif choose=='3':
@@ -61,11 +75,13 @@ def staff_menu(staff):
             table_code = input("Nhập mã bàn: ").strip().upper()
             check = False
             for cat, tables in table_data.items():
-                for t in (tables):
-                    if t[0] == table_code:
+                for i, t in enumerate(tables):#dùng enumerate duyệt chỉ số i cho là key và t là value
+                    t=list(t)#chuyển tuple thành list
+                    if t[0].upper() == table_code:
                         check = True
                         if t[2] == "Trống":
                             t[2]="Đã có khách"
+                            tables[i]=t #cập nhật lại trong danh sách bàn
                             order["Bàn"] = table_code
                             order["Trạng thái"] = "Đang phục vụ"
                             print(f"Đã gán bàn {table_code} cho đơn {order['ID']}")
