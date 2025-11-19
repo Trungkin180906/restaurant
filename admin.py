@@ -72,7 +72,7 @@ def see_staff():
 
 #thêm nhân viên
 def add_staff():
-    print("\n===== Add EMPLOYEE =====")
+    print("\n===== ADD EMPLOYEE =====")
     name=input("Name: ").strip()
     phone=input("Phone number: ").strip()
     email=input("Email: ").strip()
@@ -111,7 +111,7 @@ def see_customer():
 #xóa khách hàng
 def remove_customer():
     see_customer()
-    i=input("Enter customer number to delete: ").strip()
+    i=input("Enter the customer number want to delete: ").strip()
     if not i.isdigit():
         print("Must enter a valid number")
         return
@@ -125,7 +125,7 @@ def remove_customer():
 #MANAGEMENT STAFF
 def management_staff():
     while True:
-        print("\n======= MANAGEMENT STAFF ======")
+        print("\n===== MANAGEMENT STAFF =====")
         print("1. View list of staff")
         print("2. Add staff")
         print("3. Delete staff")
@@ -146,7 +146,7 @@ def management_staff():
 #MANAGEMENT MENU
 def management_menu():
     while True:
-        print("\n=== MANAGEMENT MENU  ===")
+        print("\n===== MANAGEMENT MENU  =====")
         print("1. View dish list")
         print("2. Add dish")
         print("3. Delete dish")
