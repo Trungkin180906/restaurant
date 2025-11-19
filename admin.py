@@ -24,7 +24,7 @@ def add_dish():
         return
     price=int(price_input)
     status=input("Tình trạng: ").strip()
-    quantity_input=int(input("Số lượng: "))
+    quantity_input=input("Số lượng: ").strip()
     if not quantity_input.isdigit():
         quantity=0
     quantity=int(quantity_input)
@@ -53,7 +53,7 @@ def update_dish():
     price_in=input(f"Giá [{i[3]}]")
     price=int(price_in) if price_in else i[3]
     status=input(f"Trạng thái {i[4]}: ").strip() or i[4]
-    stock_in=input(f"Số tồn {i[4]}: ").strip()
+    stock_in=input(f"Số lượng {i[4]}: ").strip()
     stock=int(stock_in) if stock_in.isdigit() else i[4]
     dish_data[cat][index]=(i[0], name, taste, price, status, stock)
     print(f"Đã cập nhất món {i[0]}")
@@ -168,7 +168,7 @@ def management_menu():
             print("Lựa chọn không hợp lệ!")
 
 #MANAGEMENT CUSTOMER
-def managenet_customer():
+def management_customer():
     while True:
         print("\n===== MANAGEMENT CUSTOMER =====")
         print("1. Xem danh sách khách hàng")
@@ -192,13 +192,13 @@ def admin_menu(admin):
         print("2. Quản lý nhân viên")
         print("3. Quản lý khách hàng")
         print("0. Thoát")
-        choose=input("Chọn(0-2): ")
+        choose=input("Chọn(0-3): ")
         if choose=='1':
             management_menu()
         elif choose=='2':
             management_staff()
         elif choose=='3':
-            management_menu()
+            management_customer()
         elif choose=='0':
             break
         else:
