@@ -6,23 +6,23 @@ from admin import admin_menu
 
 def main():
     while True:
-        print("\n=== HỆ THỐNG ĐẶT MÓN NHÀ HÀNG ===")
-        print("1. Đăng ký")
-        print("2. Đăng nhập")
-        print("3. Quên mật khẩu")
-        print("0. Thoát")
-        choice = input("Chọn(0-3): ").strip()
+        print("\n=== RESTAURANT ORDERING SYSTEM ===")
+        print("1. Register")
+        print("2. Log in")
+        print("3. Forgot password")
+        print("0. Leave")
+        choice = input("Select(0-3): ").strip()
 
         if choice=="1":
             # Đăng ký
             user=register()
             if user:
-                print(f"Đăng ký thành công: {user.name} ({user.role})")
+                print(f"Registered successfully: {user.name} ({user.role})")
         elif choice=="2":
             # Đăng nhập
             user=login()
             if user:
-                print(f"Đăng nhập thành công: {user.name} ({user.role})")
+                print(f"Log in successfully: {user.name} ({user.role})")
                 # Phân quyền menu theo vai trò
                 if user.role=="customer":
                     customer_menu(user)
@@ -31,15 +31,15 @@ def main():
                 elif user.role=="admin":
                     admin_menu(user)
             else:
-                print("Sai email hoặc mật khẩu!")
+                print("Wrong email or password!")
         elif choice=="3":
             # Quên mật khẩu
             forget_password()
         elif choice=="0":
-            print("Thoát hệ thống")
+            print("Exit the system")
             break
         else:
-            print("Lựa chọn không hợp lệ! Vui lòng chọn lại")
+            print("Invalid selection! Please select again.")
 
 if __name__=="__main__":
     main()

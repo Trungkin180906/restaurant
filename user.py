@@ -1,5 +1,5 @@
 class User:
-    def __init__(self, name, phone, email, password, role="customer", gender="khác"):
+    def __init__(self, name, phone, email, password, role="customer", gender="other"):
         self.name = name
         self.phone = phone
         self.email = email
@@ -8,11 +8,11 @@ class User:
         self.gender = gender
 
 class Customer(User):
-    def __init__(self, name, phone, email, password, gender="khác"):
+    def __init__(self, name, phone, email, password, gender="other"):
         super().__init__(name, phone, email, password, "customer", gender)
 
 class Staff(User):
-    def __init__(self, name, phone, email, password, gender="khác"):
+    def __init__(self, name, phone, email, password, gender="other"):
         super().__init__(name, phone, email, password, "staff", gender)
 
 class Admin:#admin ko kế thừa từ user nên ko dùng supper()

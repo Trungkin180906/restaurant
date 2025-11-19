@@ -1,101 +1,143 @@
 from menu_order import list_orders
 from table import see_table, table_data
+
 def staff_menu(staff):
     while True:
-        print("\n===== NHIỆM VỤ NHÂN VIÊN =====")
-        print("1. Xem các đơn hàng")
-        print("2. Cập nhật trạng thái đơn hàng")
-        print("3. Chỉ định bàn cho đơn hàng")
-        print("0. Thoát!")
-        choose=input("Chọn công việc (0-3): ")
+        print("\n===== STAFF DUTIES =====")
+        print("1. View all orders")
+        print("2. Update order status")
+        print("3. Assign table to order")
+        print("0. Exit!")
+        choose = input("Select task (0-3): ")
 
-        if choose=='1':
+        if choose == '1':
             if not list_orders:
-                print("Chưa có đơn hàng")
+                print("No orders yet.")
                 continue
-            print("\n===== DANH SÁCH ĐƠN HÀNG =====")
-            for i,order in enumerate(list_orders, start=1):#dùng enumerate duyệt cái phần tử trong tuple, list, dict qua for
-                print(f"{i}. Mã đơn {order['ID']}")
-                print(f"Khách hàng   :{order['Họ và tên']}")
-                print(f"Phương thức  :{order['Phương thức']}")
-                if order['Phương thức'].lower()=='mang đi':
-                    print(f"Địa chỉ giao        :{order.get('Địa chỉ', 'không có')}")
-                    print(f"SDT nhân            :{order.get('SDT nhận', 'không có')}")
-                    print(f"Thời gian dự kiến   :{order.get('Thời gian', 'Không có')}")
-                    print(f"Ghi chú cho shipper :{order.get('Ghi chú', 'không có')}")
-                print(f"Bàn          :{order.get('Bàn', 'Chưa gán')}")
-                print(f"Trạng thái   :{order.get('Trạng thái', 'Mới đặt')}")
-                print(f"Thanh toán   :{order.get('Phương thức thanh toán', 'Chưa thanh toán')}")
-        elif choose=='2':
+            print("\n===== ORDER LIST =====")
+            
+            # Using enumerate to loop through the list of orders
+            for i, order in enumerate(list_orders, start=1):
+                print(f"{i}. Order ID {order['ID']}")
+                print(f"Customer      : {order['Customer Name']}")
+                print(f"Method        : {order['Delivery Method']}")
+                
+                if order['Delivery Method'].lower() == 'take away':
+                    print(f"Delivery Address      : {order.get('Address', 'Not available')}")
+                    print(f"Recipient Phone       : {order.get('Phone', 'Not available')}")
+                    print(f"Estimated Time        : {order.get('Time', 'Not available')}")
+                    print(f"Note for Shipper      : {order.get('Note for Shipper', 'None')}")
+                    
+                print(f"Table         : {order.get('Table', 'Not assigned')}")
+                print(f"Status        : {order.get('Status', 'New Order')}")
+                print(f"Payment       : {order.get('Payment Method', 'Not paid')}")
+                
+        elif choose == '2':
             if not list_orders:
-                print("Chưa có đơn để cập nhật!")
+                print("No orders to update!")
                 continue
-            index=input("Nhập số thứ tự đơn cần cập nhật: ").strip()
-            if not index.isdigit():#kiểm tra xem có phải số
-                print("Vui lòng nhập số!")
+                
+            index = input("Enter the sequence number of the order to update: ").strip()
+            
+            if not index.isdigit():  # Check if it is a number
+                print("Please enter a number!")
                 continue
-            idx=int(index)-1 
-            if 0<=idx<len(list_orders):
-                order=list_orders[idx]
-                print(f"Đơn hiện tại: {order['ID']} - Trang thái: {order['Trạng thái']}")
-                new_status=input("Trạng thái mới (xác nhận/chế biến/hoàn tất/hủy): ").lower().strip()
-                if new_status=='hủy':
-                    if not order.get('Yêu cầu hủy'):#kiểm tra xem khách đã gửi yêu cầu hay chưa
-                        print("Khách chưa gửi yêu cầu hủy đơn")
+                
+            idx = int(index) - 1 
+            
+            if 0 <= idx < len(list_orders):
+                order = list_orders[idx]
+                print(f"Current Order: {order['ID']} - Status: {order['Status']}")
+                
+                new_status = input("New status (confirm/processing/completed/cancel): ").lower().strip()
+                
+                if new_status == 'cancel':
+                    # Check if the customer has sent a cancellation request
+                    if not order.get('Cancellation Request'):
+                        print("Customer has not submitted a cancellation request.")
                         continue
-                    #lưu thông tin hoàn tiền cho khách
-                    refund_money=order.get("Tính tổng")
-                    order['Trạng thái']='Đã hủy'
-                    order['Hoàn tiền']=refund_money
-                    order['Thông báo']=f"Bạn đã hủy đơn {order['ID']} thành công"
-                    list_orders.pop(idx)#xóa khỏi danh sách đơn hàng staff
-                    print(order['Thông báo'])
+                        
+                    # Save refund info for the customer
+                    refund_money = order.get("Total Amount")
+                    order['Status'] = 'Cancelled'
+                    order['Refund Amount'] = refund_money
+                    order['Notification'] = f"Order {order['ID']} cancelled successfully."
+                    
+                    list_orders.pop(idx)  # Remove from staff order list
+                    print(order['Notification'])
+                    
+                elif new_status in ['confirm', 'processing', 'completed']:
+                    # Map input status to standardized English status names
+                    if new_status == 'confirm':
+                        final_status = 'Confirmed'
+                    elif new_status == 'processing':
+                        final_status = 'In Processing'
+                    elif new_status == 'completed':
+                        final_status = 'Completed'
+                    
+                    order['Status'] = final_status
+                    print(f"Successfully updated order status to {final_status}.")
                 else:
-                    order['Trạng thái']=new_status
-                    print(f"Đã cập nhật thành công đơn hàng {new_status}")
+                    print("Invalid status option.")
+                    
             else:
-                print("Cập nhật đơn hàng không thành công!")
-        elif choose=='3':
+                print("Order update failed (Invalid order number)!")
+                
+        elif choose == '3':
             if not list_orders:
-                print("Chưa có đơn để chỉ định bàn!")
+                print("No orders to assign a table to!")
                 continue
-            index = input("Nhập số thứ tự đơn cần chỉ định bàn: ").strip()
+                
+            index = input("Enter the sequence number of the order to assign a table: ").strip()
+            
             if not index.isdigit():
-                print("Vui lòng nhập số!")
+                print("Please enter a number!")
                 continue
+                
             idx = int(index) - 1
+            
             if not (0 <= idx < len(list_orders)):
-                print("Không tồn tại đơn hàng!")
+                print("Order does not exist!")
                 continue
+                
             order = list_orders[idx]
-            if order["Phương thức"].lower()!="tại chỗ":
-                print("Đơn mang đi - không cần bàn")
+            
+            if order["Delivery Method"].lower() != "at venue":
+                print("Take away order - no table needed.")
                 continue
-            see_table()
-            table_code = input("Nhập mã bàn: ").strip().upper()
+                
+            see_table()  # Function from imported module
+            table_code = input("Enter table code: ").strip().upper()
             check = False
+            
             for cat, tables in table_data.items():
-                for i, t in enumerate(tables):#dùng enumerate duyệt chỉ số i cho là key và t là value
-                    t=list(t)#chuyển tuple thành list
+                # Using enumerate to loop through the index (i) and value (t)
+                for i, t in enumerate(tables):
+                    t = list(t)  # Convert tuple to list for modification
+                    
                     if t[0].upper() == table_code:
                         check = True
-                        if t[2] == "Trống":
-                            t[2]="Đã có khách"
-                            tables[i]=t #cập nhật lại trong danh sách bàn
-                            order["Bàn"] = table_code
-                            order["Trạng thái"] = "Đang phục vụ"
-                            print(f"Đã gán bàn {table_code} cho đơn {order['ID']}")
+                        if t[2] == "Trống": # Assuming table_data uses "Trống" for empty
+                            t[2] = "Occupied"
+                            tables[i] = tuple(t) # Update back as tuple/list depending on table_data structure
+                            
+                            order["Table"] = table_code
+                            order["Status"] = "Serving"
+                            print(f"Successfully assigned table {table_code} to order {order['ID']}")
                         else:
-                            print("Bàn đã có khách, chọn bàn khác!")
+                            print("Table is occupied, choose another table!")
                         break
+                        
                 if check:
                     break
+                    
             if not check:
-                print("Mã bàn không tồn tại!")
-        elif choose=='0':
+                print("Table code does not exist!")
+                
+        elif choose == '0':
             break
+            
         else:
-            print("Lựa chọn không hợp lệ!")
+            print("Invalid choice!")
 
-#staff_menu() 
-  
+#staff_menu()s

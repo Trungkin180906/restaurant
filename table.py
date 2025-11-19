@@ -1,32 +1,32 @@
 #tạo list table
 from tabulate import tabulate
 table_data={
-    'A':[("A1", 10, "Trống"),
-         ("A2", 10, "Trống"),
-         ("A3", 12, "Trống"),
-         ("A4", 15, "Trống"),
-         ("A5", 20, "Trống"),
-         ("A6", 20, "Trống"),
+    'A':[("A1", 10, "Empty"),
+         ("A2", 10, "Empty"),
+         ("A3", 12, "Empty"),
+         ("A4", 15, "Empty"),
+         ("A5", 20, "Empty"),
+         ("A6", 20, "Empty"),
          ],
-    'B':[("B1", 5, "Trống"),
-         ("B2", 5, "Trống"),
-         ("B3", 5, "Trống"),
-         ("B4", 7, "Trống"),
-         ("B5", 6, "Trống"),
+    'B':[("B1", 5, "Empty"),
+         ("B2", 5, "Empty"),
+         ("B3", 5, "Empty"),
+         ("B4", 7, "Empty"),
+         ("B5", 6, "Empty"),
          ],
-    'C':[("C1", 3, "Trống"),
-         ("C2", 2, "Trống"),
-         ("C3", 4, "Trống"),
-         ("C4", 3, "Trống"),
+    'C':[("C1", 3, "Empty"),
+         ("C2", 2, "Empty"),
+         ("C3", 4, "Empty"),
+         ("C4", 3, "Empty"),
     ],
 }
 
 def see_table():
-    print("\n===== DANH SÁCH BÀN =====")
+    print("\n===== TABLE LIST =====")
     for cat, items in table_data.items():
         table=[]
         for i in items:
             table.append([i[0], i[1], i[2]]) 
-        header=["Mã", "Số Ghế", "Tình trạng"]
+        header=["Code", "seat number", "Status"]
         print(f"\n----- {cat.upper()} -----")
         print(tabulate(table, headers=header, tablefmt="fancy_grid"))
