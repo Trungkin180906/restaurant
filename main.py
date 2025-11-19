@@ -6,7 +6,7 @@ from admin import admin_menu
 
 def main():
     while True:
-        print("\n=== RESTAURANT ORDERING SYSTEM ===")
+        print("\n===== RESTAURANT ORDERING SYSTEM =====")
         print("1. Register")
         print("2. Log in")
         print("3. Forgot password")
