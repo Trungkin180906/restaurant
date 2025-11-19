@@ -48,39 +48,29 @@ def see_menu():
         print(f"\n----- {cat.upper()} -----")
         print(tabulate(table, headers=header, tablefmt="fancy_grid"))
 
-
-#search dish in items
-def search_dish(code):
-    code=str(code).upper()
-    for cat, items in dish_data.items():
-        for i in items:
-            if str(i[0]).upper()==code.upper():
-                return i[1], i[3]
-    return None, None        
-
 #search name dish in items
 def search_name_dish(keyword):
-    print(f"Kết quả tìm kiếm cho: {keyword}")
-    search=False
+    keyword=keyword.lower()
+    result=[]
     for cat, items in dish_data.items():
         for i in items:
             if keyword.lower() in i[1].lower():
-                print(f"{i[0]} - {i[1]} {i[3]:,}")
-                search=True
-    if not search:
-        print("Không tìm thấy món phù hợp trong menu!")
+                result.append({
+                    "Mã":i[0],
+                    "Tên món":i[1],
+                    "Giá":i[3]
+                })
+    return result
 
 #sort dish
 def sort_dish(category_name):
     # 1. TÌM NHÓM (Giữ nguyên logic tìm kiếm thông minh đã sửa lúc nãy)
     search_key = category_name.strip().lower()
     found_key = None
-
     for key in dish_data:
         if key.lower() == search_key:
             found_key = key
             break
-    
     # 2. NẾU TÌM THẤY -> TIẾN HÀNH SẮP XẾP THỦ CÔNG
     if found_key:
         # Lấy danh sách món ăn của nhóm đó
@@ -133,13 +123,13 @@ def view_cart():
     if not cart:
         print("Giỏ hàng trống!")
         return
-    print("\nGIỎ HÀNG CỦA BẠN")
+    print("\n===== GIỎ HÀNG CỦA BẠN =====")
     total=0
     for i, item in enumerate(cart):
         money=item['Giá']*item['Số lượng']
         total+=money
-        print(f"{i}: {item['Tên món']} - Số lượng:{item['Số lượng']} - Ghi chú: {item['Ghi chú']} - Giá{money:,}đ")
-    print(f"Tổng số tiền {total}VND")
+        print(f"{i}: {item['Tên món']} - Số lượng:{item['Số lượng']} - Ghi chú: {item['Ghi chú']} - Giá: {money:,}đ")
+    print(f"Tổng số tiền {total:,}VND")
 
 #xóa món ăn khỏi giỏ hàng
 def remove_dish_cart(i):
@@ -223,8 +213,10 @@ def payment(order):
 def get_customer_order(customer):
     orders=[]
     for order in list_orders:
-        orders.append(order)
+        if order['Họ và tên']==customer:
+            orders.append(order)
     return orders
+
 #hủy đơn hàng nếu khách hàng mới đặt 
 def cancel_order(customer):
     customer_order=get_customer_order(customer)
@@ -241,11 +233,11 @@ def cancel_order(customer):
     choose=int(choose)-1
     if 0<=choose<len(customer_order):
         cancel=customer_order[choose]
-        if cancel['Trạng thái']!='Mới đặt':
-            print("Đơn này không thể hủy, đã được chế biến")
+        if cancel.get('Yêu cầu hủy'):
+            print("Bạn đã gửi yêu cầu hủy đơn này rồi")
             return
-        list_orders.remove(cancel)
-        print(f"Đã hủy đơn hàng {cancel['ID']} thành công")
+        cancel['Yêu cầu hủy']=True
+        print(f"Bạn đã gửi yêu cầu hủy đơn {cancel['ID']}. Vui lòng đợi nhân viên duyệt")
     else:
         print("Số thứ tự không hợp lệ!")
 
@@ -256,19 +248,15 @@ def print_order(order):
     print(f"Khách hàng  :{order['Họ và tên']} ")
     for i, item in enumerate(order["Items"],1):
         print(f"{i}: {item['Tên món']} - số lượng: {item['Số lượng']} - ghi chú: {item['Ghi chú']} - giá: {item['Giá']:,}đ")
-    #nếu đơn mang đi thì sẽ in ra thông tin thêm
-    if order['Phương thức'].lower()=='mang đi':
+    if order['Phương thức'].lower()=='mang đi':#nếu đơn mang đi thì sẽ in ra thông tin thêm
         print(f"Địa chỉ giao        :{order.get('Địa chỉ', 'Chưa có')}")
         print(f"SDT nhận            :{order.get('Phone', 'Chưa có')}")
         print(f"Thời gian dự kiến   :{order.get('Thời gian', 'Chưa có')}")
         print(f"Ghi chú cho shipper :{order.get('Ghi chú', 'Không có')}")
-    else:  # đơn tại chỗ
-        print(f"Bàn          :{order['Bàn']}")
-
-    if "Phương thức thanh toán" in order:
+    else:#đơn tại chỗ
+        print(f"Bàn         :{order['Bàn']}")
+    if "Phương thức thanh toán" in order:#phương thức thanh toán
         print(f"Thanh toán  :{order['Phương thức thanh toán']}")
-    print(f"Tính tổng   :{order['Tính tổng']}VND") 
-    print(f"Trạng thái  :{order['Trạng thái']}")  
+    print(f"Tính tổng   :{order['Tính tổng']:,}VND") 
+    print(f"Trạng thái  :{order['Trạng thái']}") 
     print("==================================")
-
-
