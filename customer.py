@@ -1,4 +1,6 @@
 from menu_order import see_menu, add_dish_cart, view_cart, remove_dish_cart, print_order, confirm_order, list_orders, cancel_order, sort_dish, search_name_dish
+
+#cập nhật thông tin khách hàng
 def update_customer(customer):
     print("\n===== UPDATE PERSONAL ACCOUNT =====")
     print(f"Email (cannot changes): {customer.email}")
@@ -80,7 +82,7 @@ def customer_menu(customer):
             else:
                 print("Invalid location!")
         elif choose=='6':
-            delivery=input("Method: (For here/Takeaway): ").strip()
+            delivery=input("Method: (for here/takeaway): ").strip()
             confirm_order(customer.name, delivery)
         elif choose=='7':
             if not list_orders:
