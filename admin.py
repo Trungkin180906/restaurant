@@ -1,9 +1,8 @@
 from menu_order import see_menu, dish_data
 from acount import acount_staff, acount_customer
 from user import Staff, Customer
-
 #DISH
-#search dish
+#Tìm món ăn theo mã
 def find_dish(code):
     code=code.strip().upper()
     for cat, items in dish_data.items():
@@ -12,7 +11,7 @@ def find_dish(code):
                 return cat, index, i
     return None
 
-#add dish
+#add dish 
 def add_dish():
     cat=input("Dish group: ").strip()
     code=input("Dish code: ").strip().upper()
@@ -41,9 +40,10 @@ def remove_dish():
         return
     dish_data[cat].pop(index)#ngược lại sẽ truy cập vào mục và xóa món theo vị trí đã chỉ định
 
+#cập nhật món ăn
 def update_dish():
     code=input("Enter the dish code that needs to be updated: ").strip().upper()
-    cat, index, i=find_dish(code)
+    cat, index, i=find_dish(code)#cat tên danh muc, index vị trí món, i thông tin món
     if not i:
         print("Dish code not found!")
         return
@@ -55,7 +55,7 @@ def update_dish():
     status=input(f"Status {i[4]}: ").strip() or i[4]
     stock_in=input(f"quantity {i[4]}: ").strip()
     stock=int(stock_in) if stock_in.isdigit() else i[4]
-    dish_data[cat][index]=(i[0], name, taste, price, status, stock)
+    dish_data[cat][index]=(i[0], name, taste, price, status, stock)#cập nhật món ăn tại vị trí chỉ định 
     print(f"Updated the dish {i[0]}")
 
 
