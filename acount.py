@@ -1,6 +1,5 @@
 import random
 from user import Customer, Staff, Admin
-
 acount_admin = [Admin("Admin Name", "admin@example.com", "admin12345")]#admin đã có sẵn 
 acount_customer=[]
 acount_staff=[]
@@ -10,18 +9,14 @@ def register():
     name=input("Name: ").strip()
     phone=input("Phone number: ").strip()
     email=input("Email: ").strip()
-
     gender=input("(male/female): ").lower().strip()
     if gender not in ["male", "female"]:
         gender="other"
-
     password=input("Password: ").strip()
-
     for i in acount_customer:
         if i.email==email:
             print("Your email has already been used")
             return
-
     print("\n===== CHOOSE A ROLE =====")
     print("1. Customer")
     print("2. Staff (authorized by admin)")
@@ -32,14 +27,12 @@ def register():
         user=Customer(name, phone, email, password, gender)
         acount_customer.append(user)
         return user
-
     #role staff
     elif role=='2':
         print("Cannot register yourself, please contact admin again")
         return
     else:
         print("Invalid selection")
-
 #admin tạo tk cho staff
 def admin_create_staff(admin):
     print("\n===== CREATE ACCOUNT FOR STAFF =====")
@@ -74,7 +67,6 @@ def login():
     for customer in acount_customer:
         if customer.email==email and customer.password==password:
             return customer
-    # print("Sai mặt khẩu hoặc email")
 
 #trường hợp người dùng quên mật khẩu
 def forget_password():
